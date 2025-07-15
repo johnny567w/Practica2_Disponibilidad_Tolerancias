@@ -1,3 +1,0 @@
-FROM curlimages/curl:latest
-
-CMD ["sh", "-c", "while sleep 5; do curl -s http://app:8080/personas; echo; done"]

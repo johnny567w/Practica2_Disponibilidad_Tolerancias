@@ -1,47 +1,35 @@
-
-
-
--- Crear usuario si no existe
-DO $$
-BEGIN
-   IF NOT EXISTS (
-      SELECT FROM pg_catalog.pg_roles WHERE rolname = 'usuario1'
-   ) THEN
-      CREATE ROLE usuario1 WITH LOGIN PASSWORD 'clave123';
-   END IF;
-END
-$$;
-
-DO $$
-BEGIN
-   IF NOT EXISTS (
-      SELECT FROM pg_database WHERE datname = 'practica_db'
-   ) THEN
-      CREATE DATABASE practica_db OWNER usuario1;
-   END IF;
-END
-$$;
-
--- Conectarse a la base de datos para ejecutar lo siguiente
-\connect practica_db
-
--- Asegurar permisos sobre el esquema public
-GRANT ALL ON SCHEMA public TO usuario1;
-
--- Crear la tabla solo si no existe
-CREATE TABLE IF NOT EXISTS personas (
-    id SERIAL PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    apellido VARCHAR(100) NOT NULL
+-- Crear tabla banco
+CREATE TABLE IF NOT EXISTS banco (
+    id BIGSERIAL PRIMARY KEY,
+    nombre VARCHAR(255)
 );
 
--- Insertar datos si la tabla está vacía
-DO $$
-BEGIN
-   IF NOT EXISTS (SELECT 1 FROM personas) THEN
-      INSERT INTO personas (nombre, apellido) VALUES
-         ('Juan', 'Pérez'),
-         ('María', 'Gómez');
-   END IF;
-END
-$$;
+-- Crear tabla cliente con FK a banco
+CREATE TABLE IF NOT EXISTS cliente (
+    id BIGSERIAL PRIMARY KEY,
+    nombre VARCHAR(255),
+    correo VARCHAR(255),
+    banco_id BIGINT,
+    CONSTRAINT fk_cliente_banco FOREIGN KEY (banco_id) REFERENCES banco(id)
+);
+
+-- Crear tabla cuenta con FK a cliente
+CREATE TABLE IF NOT EXISTS cuenta (
+    id BIGSERIAL PRIMARY KEY,
+    tipo VARCHAR(255),
+    saldo DOUBLE PRECISION,
+    cliente_id BIGINT,
+    CONSTRAINT fk_cuenta_cliente FOREIGN KEY (cliente_id) REFERENCES cliente(id)
+);
+
+-- Crear tabla transaccion con FKs a cuenta (origen y destino)
+CREATE TABLE IF NOT EXISTS transaccion (
+    id BIGSERIAL PRIMARY KEY,
+    tipo VARCHAR(255),
+    monto DOUBLE PRECISION,
+    fecha TIMESTAMP,
+    cuenta_origen_id BIGINT,
+    cuenta_destino_id BIGINT,
+    CONSTRAINT fk_transaccion_origen FOREIGN KEY (cuenta_origen_id) REFERENCES cuenta(id),
+    CONSTRAINT fk_transaccion_destino FOREIGN KEY (cuenta_destino_id) REFERENCES cuenta(id)
+);

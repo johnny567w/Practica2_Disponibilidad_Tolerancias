@@ -8,7 +8,7 @@ import { TransaccionDTO } from '../../app/modelos/Transaccion-dto';
   providedIn: 'root'
 })
 export class TransaccionService {
-  private baseUrl = 'http://localhost:8080/transacciones';
+private baseUrl = '/api/transacciones';
 
   constructor(private http: HttpClient) {}
 

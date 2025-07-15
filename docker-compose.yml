@@ -1,0 +1,71 @@
+version: '3.9'
+
+services:
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: banco
+      POSTGRES_USER: usuario1
+      POSTGRES_PASSWORD: contraseña
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - banco-network
+
+  spring-backend-1:
+    image: johnnys567/backend-banco:latest
+    container_name: spring-backend-1
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/banco
+      - SPRING_DATASOURCE_USERNAME=usuario1
+      - SPRING_DATASOURCE_PASSWORD=contraseña
+    networks:
+      - banco-network
+
+  spring-backend-2:
+    image: johnnys567/backend-banco:latest
+    container_name: spring-backend-2
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/banco
+      - SPRING_DATASOURCE_USERNAME=usuario1
+      - SPRING_DATASOURCE_PASSWORD=contraseña
+    networks:
+      - banco-network
+
+  backend:
+    image: nginx:alpine
+    container_name: backend-loadbalancer
+    volumes:
+      - ./nginx-backend.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - spring-backend-1
+      - spring-backend-2
+    ports:
+      - "8080:80"
+    networks:
+      - banco-network
+
+  frontend:
+    build:
+      context: ./front/frontend
+      dockerfile: Dockerfile
+    container_name: angular-frontend
+    depends_on:
+      - backend
+    ports:
+      - "4200:80"
+    networks:
+      - banco-network
+
+volumes:
+  db_data:
+
+networks:
+  banco-network:
+    driver: bridge

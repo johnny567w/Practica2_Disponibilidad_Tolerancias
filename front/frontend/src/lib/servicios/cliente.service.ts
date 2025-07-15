@@ -10,7 +10,7 @@ import { ClienteDTO } from '../../app/modelos/cliente-dto';
 
 export class ClienteService {
 
-  private apiUrl = 'http://localhost:8080/clientes';
+  private baseUrl = '/api/clientes';
 
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -19,18 +19,18 @@ export class ClienteService {
   constructor(private http: HttpClient) {}
 
   listar(): Observable<ClienteDTO[]> {
-    return this.http.get<ClienteDTO[]>(this.apiUrl);
+    return this.http.get<ClienteDTO[]>(this.baseUrl);
   }
 
   crear(cliente: ClienteDTO): Observable<ClienteDTO> {
-    return this.http.post<ClienteDTO>(this.apiUrl, cliente, this.httpOptions);
+    return this.http.post<ClienteDTO>(this.baseUrl, cliente, this.httpOptions);
   }
 
   actualizar(cliente: ClienteDTO): Observable<ClienteDTO> {
-    return this.http.put<ClienteDTO>(`${this.apiUrl}/${cliente.id}`, cliente, this.httpOptions);
+    return this.http.put<ClienteDTO>(`${this.baseUrl}/${cliente.id}`, cliente, this.httpOptions);
   }
 
   eliminar(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }
