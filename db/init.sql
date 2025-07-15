@@ -1,35 +1,55 @@
--- Crear tabla banco
-CREATE TABLE IF NOT EXISTS banco (
-    id BIGSERIAL PRIMARY KEY,
-    nombre VARCHAR(255)
+DROP TABLE IF EXISTS transaccion;
+DROP TABLE IF EXISTS cuenta;
+DROP TABLE IF EXISTS cliente;
+DROP TABLE IF EXISTS banco;
+
+CREATE TABLE banco (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL
 );
 
--- Crear tabla cliente con FK a banco
-CREATE TABLE IF NOT EXISTS cliente (
-    id BIGSERIAL PRIMARY KEY,
-    nombre VARCHAR(255),
-    correo VARCHAR(255),
-    banco_id BIGINT,
-    CONSTRAINT fk_cliente_banco FOREIGN KEY (banco_id) REFERENCES banco(id)
+CREATE TABLE cliente (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    correo VARCHAR(100) NOT NULL,
+    banco_id INTEGER REFERENCES banco(id)
 );
 
--- Crear tabla cuenta con FK a cliente
-CREATE TABLE IF NOT EXISTS cuenta (
-    id BIGSERIAL PRIMARY KEY,
-    tipo VARCHAR(255),
-    saldo DOUBLE PRECISION,
-    cliente_id BIGINT,
-    CONSTRAINT fk_cuenta_cliente FOREIGN KEY (cliente_id) REFERENCES cliente(id)
+CREATE TABLE cuenta (
+    id SERIAL PRIMARY KEY,
+    tipo VARCHAR(50) NOT NULL,
+    saldo NUMERIC(12,2) NOT NULL,
+    cliente_id INTEGER REFERENCES cliente(id)
 );
 
--- Crear tabla transaccion con FKs a cuenta (origen y destino)
-CREATE TABLE IF NOT EXISTS transaccion (
-    id BIGSERIAL PRIMARY KEY,
-    tipo VARCHAR(255),
-    monto DOUBLE PRECISION,
+CREATE TABLE transaccion (
+    id SERIAL PRIMARY KEY,
+    tipo VARCHAR(50),
+    monto NUMERIC(12,2),
     fecha TIMESTAMP,
-    cuenta_origen_id BIGINT,
-    cuenta_destino_id BIGINT,
-    CONSTRAINT fk_transaccion_origen FOREIGN KEY (cuenta_origen_id) REFERENCES cuenta(id),
-    CONSTRAINT fk_transaccion_destino FOREIGN KEY (cuenta_destino_id) REFERENCES cuenta(id)
+    cuenta_origen_id INTEGER,
+    cuenta_destino_id INTEGER
 );
+
+INSERT INTO banco (nombre) VALUES
+('Banco Pichincha'),
+('Banco Guayaquil'),
+('Banco Internacional');
+
+INSERT INTO cliente (nombre, correo, banco_id) VALUES
+('Ana Torres', 'ana@example.com', 1),
+('Luis Pérez', 'luis@example.com', 2),
+('Carla Mejía', 'carla@example.com', 3);
+
+INSERT INTO cuenta (tipo, saldo, cliente_id) VALUES
+('Ahorro', 1500.00, 1),
+('Corriente', 3200.00, 2),
+('Ahorro', 500.00, 3);
+
+INSERT INTO transaccion (tipo, monto, fecha, cuenta_origen_id, cuenta_destino_id) VALUES
+('Depósito', 500.00, NOW(), NULL, 1),
+('Transferencia', 250.00, NOW(), 2, 3),
+('Retiro', 100.00, NOW(), 1, NULL);
+
+CREATE DATABASE usuario1;
+ALTER TABLE cuenta ADD COLUMN numero VARCHAR(255);

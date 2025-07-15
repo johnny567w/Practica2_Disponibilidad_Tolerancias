@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/transacciones")
+@RequestMapping("/api/transacciones")
 @CrossOrigin(origins = "*")
 public class TransaccionController {
 

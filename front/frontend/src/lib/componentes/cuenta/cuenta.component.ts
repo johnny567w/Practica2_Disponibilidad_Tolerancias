@@ -100,7 +100,7 @@ const cuentaDTO: CuentaDTO = {
     this.mostrarFormulario = true;
     this.nuevaCuentaId = cuenta.id!;
 this.cuentaForm.setValue({
-  clienteId: cuenta.cliente.id,
+  cliente: cuenta.cliente.id,
   tipo: cuenta.tipo,
   saldo: cuenta.saldo
 });
@@ -116,15 +116,16 @@ this.cuentaForm.setValue({
     }
   }
 
-  resetFormulario(): void {
-    this.cuentaForm.reset({
-      clienteId: null,
-      tipo: '',
-      saldo: 0
-    });
-    this.nuevaCuentaId = null;
-    this.mostrarFormulario = false;
-  }
+resetFormulario(): void {
+  this.cuentaForm.reset({
+    cliente: null,
+    tipo: '',
+    saldo: 0
+  });
+  
+  this.nuevaCuentaId = null;
+  this.mostrarFormulario = false;
+}
 
   cancelar(): void {
     this.resetFormulario();
