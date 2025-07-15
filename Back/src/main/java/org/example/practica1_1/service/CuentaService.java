@@ -1,6 +1,5 @@
 package org.example.practica1_1.service;
 
-import org.example.practica1_1.Model.Cliente;
 import org.example.practica1_1.Model.Cuenta;
 import org.example.practica1_1.Model.Transaccion;
 import org.example.practica1_1.repo.ClienteRepository;
@@ -31,15 +30,12 @@ public class CuentaService {
                 .orElseThrow(() -> new RuntimeException("Cuenta no encontrada"));
     }
 
-    public Cuenta crear(Cuenta cuenta, Long clienteId) {
-        Cliente cliente = clienteRepository.findById(clienteId)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-        cuenta.setCliente(cliente);
-        cuenta.setSaldo(0.0);
+    public Cuenta crearCuenta(Cuenta cuenta) {
         return cuentaRepository.save(cuenta);
     }
 
-    public void eliminar(Long id) {
+
+    public void eliminarCuenta(Long id) {
         cuentaRepository.deleteById(id);
     }
 
@@ -84,4 +80,8 @@ public class CuentaService {
         tx.setCuentaDestino(destino);
         transaccionRepository.save(tx);
     }
+    public List<Cuenta> listarCuentas() {
+        return cuentaRepository.findAll();
+    }
+
 }

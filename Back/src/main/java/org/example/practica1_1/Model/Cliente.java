@@ -1,12 +1,15 @@
 package org.example.practica1_1.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
 public class Cliente {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,17 +19,22 @@ public class Cliente {
     private String correo;
 
     @ManyToOne
+    @JoinColumn(name = "banco_id")
+    @JsonBackReference("banco-cliente")
     private Banco banco;
 
     @OneToMany(mappedBy = "cliente")
+    @JsonIgnore
     private List<Cuenta> cuentas;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    // Getters y Setters
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNombre() {
@@ -51,13 +59,5 @@ public class Cliente {
 
     public void setBanco(Banco banco) {
         this.banco = banco;
-    }
-
-    public List<Cuenta> getCuentas() {
-        return cuentas;
-    }
-
-    public void setCuentas(List<Cuenta> cuentas) {
-        this.cuentas = cuentas;
     }
 }

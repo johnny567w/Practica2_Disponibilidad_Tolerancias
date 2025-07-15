@@ -1,0 +1,61 @@
+
+
+<div class="section-content">
+    <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-semibold">Gestión de Bancos</h3>
+        <button (click)="toggleForm()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            <i class="fas fa-plus mr-2"></i>Agregar Banco
+        </button>
+    </div>
+
+    <!-- Add Bank Form -->
+    <div *ngIf="showForm" class="bg-white p-4 rounded-lg shadow mb-6">
+        <h4 class="text-lg font-medium mb-4">Nuevo Banco</h4>
+        <form (ngSubmit)="guardarBanco()">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="col-span-2">
+                    <label class="block text-sm font-medium text-gray-700">Nombre</label>
+                    <input [(ngModel)]="nuevoBanco.nombre" name="nombre" type="text" required
+                        class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                </div>
+            </div>
+            <div class="mt-4 flex justify-end space-x-2">
+                <button type="button" (click)="toggleForm()"
+                    class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">Cancelar</button>
+                <button type="submit"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Guardar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Banks Table -->
+    <div class="bg-white p-4 rounded-lg shadow">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nombre</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
+                    </tr>
+                </thead>
+                
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <tr *ngFor="let banco of bancos">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ banco.id }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">{{ banco.nombre }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+<button class="text-blue-600 hover:text-blue-800 mr-2" (click)="editarBanco(banco)">
+  <i class="fas fa-edit"></i>
+</button>
+
+                            <button class="text-red-600 hover:text-red-800" (click)="banco.id && eliminarBanco(banco.id)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

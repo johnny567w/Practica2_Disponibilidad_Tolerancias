@@ -1,5 +1,8 @@
 package org.example.practica1_1.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -13,22 +16,29 @@ public class Cuenta {
 
     private String tipo;
     private Double saldo;
+    @Column(unique = true)
+    private String numero;
 
     @ManyToOne
+    @JsonIgnoreProperties({"cuentas", "banco"})
     private Cliente cliente;
 
-    @OneToMany(mappedBy = "cuentaOrigen")
+
+    @OneToMany(mappedBy = "cuentaOrigen", cascade = CascadeType.ALL)
+    @JsonManagedReference("trans-origen")
     private List<Transaccion> transaccionesOrigen;
 
-    @OneToMany(mappedBy = "cuentaDestino")
+    @OneToMany(mappedBy = "cuentaDestino", cascade = CascadeType.ALL)
+    @JsonManagedReference("trans-destino")
     private List<Transaccion> transaccionesDestino;
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    // Getters y Setters
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTipo() {
@@ -70,4 +80,12 @@ public class Cuenta {
     public void setTransaccionesDestino(List<Transaccion> transaccionesDestino) {
         this.transaccionesDestino = transaccionesDestino;
     }
+    public String getNumero() {
+        return numero;
+    }
+
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
+
 }

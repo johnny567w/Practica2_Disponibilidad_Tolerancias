@@ -1,0 +1,99 @@
+<div class="section-content">
+  <div class="flex justify-between items-center mb-4">
+    <h3 class="text-xl font-semibold">Gestión de Transacciones</h3>
+    <div class="flex space-x-2">
+      <button (click)="mostrarFormulario('deposito')" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+        <i class="fas fa-plus-circle mr-2"></i>Depósito
+      </button>
+      <button (click)="mostrarFormulario('retiro')" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+        <i class="fas fa-minus-circle mr-2"></i>Retiro
+      </button>
+      <button (click)="mostrarFormulario('transferencia')" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        <i class="fas fa-exchange-alt mr-2"></i>Transferencia
+      </button>
+    </div>
+  </div>
+
+  <!-- Formulario de Depósito -->
+  <div *ngIf="formularioVisible === 'deposito'" class="bg-white p-4 rounded-lg shadow mb-6">
+    <h4 class="text-lg font-medium mb-4">Realizar Depósito</h4>
+    <form [formGroup]="depositoForm" (ngSubmit)="realizarDeposito()">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Cuenta</label>
+          <select formControlName="cuentaId" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+            <option *ngFor="let cuenta of cuentas" [value]="cuenta.id">
+              Cuenta {{ cuenta.id }} - {{ cuenta.cliente?.nombre || 'Sin cliente' }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Monto</label>
+          <input type="number" formControlName="monto" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+        </div>
+      </div>
+      <div class="mt-4 flex justify-end space-x-2">
+        <button type="button" (click)="cancelarFormulario()" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">Cancelar</button>
+        <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Depositar</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Formulario de Retiro -->
+  <div *ngIf="formularioVisible === 'retiro'" class="bg-white p-4 rounded-lg shadow mb-6">
+    <h4 class="text-lg font-medium mb-4">Realizar Retiro</h4>
+    <form [formGroup]="retiroForm" (ngSubmit)="realizarRetiro()">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Cuenta</label>
+          <select formControlName="cuentaId" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+            <option *ngFor="let cuenta of cuentas" [value]="cuenta.id">
+              Cuenta {{ cuenta.id }} - {{ cuenta.cliente?.nombre || 'Sin cliente' }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Monto</label>
+          <input type="number" formControlName="monto" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+        </div>
+      </div>
+      <div class="mt-4 flex justify-end space-x-2">
+        <button type="button" (click)="cancelarFormulario()" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">Cancelar</button>
+        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Retirar</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Formulario de Transferencia -->
+  <div *ngIf="formularioVisible === 'transferencia'" class="bg-white p-4 rounded-lg shadow mb-6">
+    <h4 class="text-lg font-medium mb-4">Realizar Transferencia</h4>
+    <form [formGroup]="transferenciaForm" (ngSubmit)="realizarTransferencia()">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Cuenta Origen</label>
+          <select formControlName="origenId" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+            <option *ngFor="let cuenta of cuentas" [value]="cuenta.id">
+              Cuenta {{ cuenta.id }} - {{ cuenta.cliente?.nombre || 'Sin cliente' }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Cuenta Destino</label>
+          <select formControlName="destinoId" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+            <option *ngFor="let cuenta of cuentas" [value]="cuenta.id">
+              Cuenta {{ cuenta.id }} - {{ cuenta.cliente?.nombre || 'Sin cliente' }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Monto</label>
+          <input type="number" formControlName="monto" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+        </div>
+      </div>
+      <div class="mt-4 flex justify-end space-x-2">
+        <button type="button" (click)="cancelarFormulario()" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">Cancelar</button>
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Transferir</button>
+      </div>
+    </form>
+  </div>
+</div>

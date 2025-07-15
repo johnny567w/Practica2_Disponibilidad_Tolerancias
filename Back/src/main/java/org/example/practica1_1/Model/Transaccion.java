@@ -1,12 +1,11 @@
 package org.example.practica1_1.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-
 @Entity
 public class Transaccion {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,17 +16,22 @@ public class Transaccion {
     private LocalDateTime fecha;
 
     @ManyToOne
+    @JoinColumn(name = "cuenta_origen_id")
+    @JsonBackReference("trans-origen")
     private Cuenta cuentaOrigen;
 
     @ManyToOne
+    @JoinColumn(name = "cuenta_destino_id")
+    @JsonBackReference("trans-destino")
     private Cuenta cuentaDestino;
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    // Getters y setters
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTipo() {

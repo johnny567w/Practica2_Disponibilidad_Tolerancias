@@ -1,9 +1,10 @@
 package org.example.practica1_1.Model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
-
 @Entity
 public class Banco {
 
@@ -13,15 +14,19 @@ public class Banco {
 
     private String nombre;
 
-    @OneToMany(mappedBy = "banco")
+    @OneToMany(mappedBy = "banco", cascade = CascadeType.ALL)
+    @JsonManagedReference("banco-cliente")
     private List<Cliente> clientes;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Banco() {}
+    // Getters y Setters
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNombre() {
