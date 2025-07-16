@@ -24,14 +24,19 @@ services:
     image: johnnys567/backend-banco:latest
     container_name: spring-backend-1
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/banco
       - SPRING_DATASOURCE_USERNAME=usuario1
       - SPRING_DATASOURCE_PASSWORD=contraseña
     networks:
       - banco-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: always
 
   spring-backend-2:
     image: johnnys567/backend-banco:latest
@@ -45,7 +50,12 @@ services:
       - SPRING_DATASOURCE_PASSWORD=contraseña
     networks:
       - banco-network
-
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: always
   backend:
     image: nginx:alpine
     container_name: backend-loadbalancer

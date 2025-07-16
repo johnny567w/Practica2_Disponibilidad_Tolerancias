@@ -8,6 +8,8 @@ import org.example.practica1_1.repo.BancoRepository;
 import org.example.practica1_1.repo.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,14 +25,19 @@ public class ClienteController {
     @Autowired
     private BancoRepository bancoRepository;
 
+    @Retryable(value = { Exception.class }, maxAttempts = 3, backoff = @Backoff(delay = 2000))
     @GetMapping
     public ResponseEntity<List<ClienteDTO>> listar() {
+        System.out.println("Intentando obtener la lista de clientes...");
         List<ClienteDTO> listaDTO = clienteRepository.findAll().stream()
                 .map(ClienteMapper::toDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(listaDTO);
     }
 
+
+
+    @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
     @PostMapping
     public ResponseEntity<ClienteDTO> crear(@RequestBody ClienteDTO clienteDTO) {
         Banco banco = bancoRepository.findById(clienteDTO.getBancoId())
@@ -40,6 +47,7 @@ public class ClienteController {
         Cliente guardado = clienteRepository.save(cliente);
         return ResponseEntity.ok(ClienteMapper.toDTO(guardado));
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<ClienteDTO> actualizar(@PathVariable Long id, @RequestBody ClienteDTO clienteDTO) {
